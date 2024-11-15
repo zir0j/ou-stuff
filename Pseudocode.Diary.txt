@@ -1,0 +1,51 @@
+General Pseudocode
+
+1. Import necessary modules
+		Import os to work with files/check if files exist
+		Import Fernet from cryptography.fernet to encrypt and decrypt diary entries
+2. Define function to generate encryption key
+3. Define function to load encryption key
+4. Define function for diary entry input
+5. Define function to save diary entry
+6. Define function to encrypt entry content
+7. Define function to manage diary archives
+8. Define function to view diary entries
+9. Define function to decrypt entry content
+10. Define function to edit diary entries
+11. Define function to show creator information
+12. Define main menu
+13. Execute main program
+
+More specific pseudocode
+START
+1. Import os and Fernet from cyptography.fernet
+2. Display menu to user
+	Inside the menu()
+	Ask user to choose from:
+	a. Write a new entry
+	b. View/Edit entries
+	c. About the program
+	
+	Depending on choice:
+		- If 1, call diary entry function to write new entry
+		- If 2, call diary archive function to view or edit entries
+		- If 3, call about creators function to display creator information
+	
+	In diary entry function:
+		- Prompt user to write and confirm if they're happy.
+		- If happy, ask for a password and save the entry using save diary entry function
+	
+	In diary archive function:
+		- Ask user if want to view or edit entries
+		- If view, call view entries function
+		- If edit, call edit entries function
+	
+	In view entries function:
+		- Check if text entries exists
+		- Ask password and display each entry if password matches
+		
+	In edit entries function:
+		- Check if text entries exists.
+		- Ask password and allow editing of entries if password matches
+END
+
