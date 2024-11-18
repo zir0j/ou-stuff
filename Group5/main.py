@@ -5,6 +5,7 @@ import os
 import json
 from cryptography.fernet import Fernet
 from getpass import getpass
+from art import *
 
 ###############
 
@@ -40,11 +41,11 @@ def save_metadata(metadata):
 metadata = load_metadata()
 
 def diary_entry():
-    writing_proper = input("Share me your thoughts! Press enter when you're done.") 
-    menu_for_saving = input("Are you happy with what you wrote?")
+    writing_proper = input("Share me your thoughts! Press enter when you're done. >>>") 
+    menu_for_saving = input("Are you happy with what you wrote? Only input Yes or No")
     while True:
         try:
-            if menu_for_saving.lower() == "yes":
+            if menu_for_saving.lower() == "Yes":
                 file_password = getpass("Insert the password for this entry:") 
                 file_name = f"entry_{len(metadata) + 1}.dat"  # Unique file name for each entry
                 encrypted_data = cipher.encrypt((file_password + '\n' + writing_proper).encode())
@@ -54,7 +55,7 @@ def diary_entry():
                 save_metadata(metadata)
                 print("Entry saved securely!")
                 break
-            elif menu_for_saving.lower() == "no":
+            elif menu_for_saving.lower() == "No":
                 print("Rewriting your entry...")
                 diary_entry()  # Restart the entry process
                 break
@@ -67,51 +68,46 @@ def diary_entry():
 def diary_archives():
     print("1. View your entries")
     print("2. Edit your entries")
-    user_choice_2 = input("What would you like to do? ")
-
-    while True:
-        try:
-            if user_choice_2 == "1":
-                list_entries()
-                file_name = input("Enter the file name of the entry you'd like to view: ")
-                if file_name in metadata:
-                    pw_input_for_viewing = getpass("Please type the password of the entry you wish to view: ")
-                    with open(file_name, "rb") as entry_file:
-                        encrypted_data = entry_file.read()
-                        decrypted_data = cipher.decrypt(encrypted_data).decode()
-                        print("decrypted data" + decrypted_data)
-                        if decrypted_data.startswith(pw_input_for_viewing):
-                            print("Your entry: ")
-                            print(decrypted_data.split("\n", 1)[1])
-                        else:
-                            print("Incorrect password!")
-                else:
-                    print("File not found!")
-                break
-            elif user_choice_2 == "2":
-                list_entries()
-                file_name = input("Enter the file name of the entry you'd like to edit: ")
-                if file_name in metadata:
-                    pw_input_for_edit = getpass("Please type the password of the entry you wish to edit: ")
-                    with open(file_name, "rb") as entry_file:
-                        encrypted_data = entry_file.read()
-                        decrypted_data = cipher.decrypt(encrypted_data).decode()
-                        if decrypted_data.startswith(pw_input_for_edit):
-                            new_entry = input("Enter your updated entry: ")
-                            new_data = pw_input_for_edit + "\n" + new_entry
-                            with open(file_name, "wb") as entry_file:
-                                entry_file.write(cipher.encrypt(new_data.encode()))
-                            print("Entry updated successfully!")
-                        else:
-                            print("Incorrect password!")
-                else:
-                    print("File not found!")
-                break
-            else:
-                print("Hmm idk that one.")
-                continue
-        except Exception as e:
-            print(f"Hmmm this doesn't belong here. Error: {e}")
+    user_choice_2 = input("What would you like to do? Only type the number of your selection.")
+    try:
+        if user_choice_2 == "1":
+            list_entries()
+            file_name = input("Enter the file name of the entry you'd like to view: ")
+            if file_name not in metadata:
+                print("File not found!")
+                return
+            pw_input_for_viewing = getpass("Please type the password of the entry you wish to view: ")
+            with open(file_name, "rb") as entry_file:
+                encrypted_data = entry_file.read()
+                decrypted_data = cipher.decrypt(encrypted_data).decode()
+            if not decrypted_data.startswith(pw_input_for_viewing):
+                print("Incorrect password!")
+                return
+            print("Your entry:")
+            print(decrypted_data.split("\n", 1)[1])
+        elif user_choice_2 == "2":
+            list_entries()
+            file_name = input("Enter the file name of the entry you'd like to edit: ")
+            if file_name not in metadata:
+                print("File not found!")
+                return
+            pw_input_for_edit = getpass("Please type the password of the entry you wish to edit: ")
+            with open(file_name, "rb") as entry_file:
+                encrypted_data = entry_file.read()
+                decrypted_data = cipher.decrypt(encrypted_data).decode()
+            if not decrypted_data.startswith(pw_input_for_edit):
+                print("Incorrect password!")
+                return
+            new_entry = input("Enter your updated entry: ")
+            new_data = pw_input_for_edit + "\n" + new_entry
+            with open(file_name, "wb") as entry_file:
+                entry_file.write(cipher.encrypt(new_data.encode()))
+            print("Entry updated successfully!")
+        else:
+            print("Hmm, I don't know that one.")
+            return
+    except Exception as e:
+        print(f"Hmmm this doesn't belong here. Error: {e}")
 
 def about_creators():
     print("This diary was amde by Group 5. For inquiries, message us at blahg blah blah")
@@ -147,8 +143,10 @@ def change_password():
 ######################
 
 def menu():
+    ascii_menu_heading = tprint("Diary. <3")
     while True:
         try:
+            print(ascii_menu_heading)
             print("\nWhat would you want to do?")
             print("1. Write")
             print("2. View/Edit")
