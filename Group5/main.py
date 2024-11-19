@@ -5,7 +5,7 @@ import os
 import json
 from cryptography.fernet import Fernet
 from getpass import getpass
-from art import *
+# from art import *
 
 ###############
 
@@ -42,7 +42,7 @@ metadata = load_metadata()
 
 def diary_entry():
     writing_proper = input("Share me your thoughts! Press enter when you're done. >>>") 
-    menu_for_saving = input("Are you happy with what you wrote? Only input Yes or No")
+    menu_for_saving = input("Are you happy with what you wrote? Only input Yes or No: ")
     while True:
         try:
             if menu_for_saving.lower() == "Yes":
@@ -143,7 +143,7 @@ def change_password():
 ######################
 
 def menu():
-    ascii_menu_heading = tprint("Diary. <3")
+    ascii_menu_heading = print("Diary. <3")
     while True:
         try:
             print(ascii_menu_heading)
