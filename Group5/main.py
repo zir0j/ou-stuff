@@ -121,7 +121,7 @@ def about_creators():
         {"Developers": "Christian Joriz Martinez (Ceej)","Email Address": "csmartinez@up.edu.ph"},
         {"Developers": "Alein Narca","Email Address": "adnarca@up.edu.ph"},
         {"Developers": "Alfred Olivan","Email Address": "aholivan@up.edu.ph"},
-        {"Developers": "Jeanelle Lorelei Paat","Email Address": "n/a"},
+        {"Developers": "Jeanelle Lorelei Paat","Email Address": "japaat@up.edu.ph"},
         {"Developers": "Billy Jan Ponce (Bill)","Email Address": "bcponce@up.edu.ph"},
         {"Developers": "John Paul Punzalan","Email Address": "japunzalan@up.edu.ph"},
         {"Developers": "Jose Manuel Velarde","Email Address": "jyvelarde@up.edu.ph"},
