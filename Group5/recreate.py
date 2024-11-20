@@ -134,7 +134,7 @@ def diary_archives():
             print(f"Hmmm this doesn't belong here. Error: {e}")
 
 def about_creators():
-    print("This diary was amde by Group 5. For inquiries, message us at blahg blah blah")
+    print("This diary was made by Group 5. For inquiries, message:")
     # List of program developers with email.
     developers = [
         {"Developers": "Edwin Aljibe","Email Address": "epaljibe@up.edu.ph"},
