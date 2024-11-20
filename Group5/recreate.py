@@ -8,6 +8,7 @@ from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from getpass import getpass
+from art import *
 
 ###############
 
@@ -165,6 +166,7 @@ def change_password():
 ######################
 
 def menu():
+    ascii_menu_heading = tprint("Diary. <3")
     while True:
         try:
             print("\nWhat would you want to do?")
