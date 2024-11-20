@@ -6,6 +6,7 @@ import json
 from cryptography.fernet import Fernet
 from getpass import getpass
 from art import *
+from tabulate import tabulate
 
 ###############
 
@@ -111,6 +112,27 @@ def diary_archives():
 
 def about_creators():
     print("This diary was amde by Group 5. For inquiries, message us at blahg blah blah")
+    # List of program developers with email.
+    developers = [
+        {"Developers": "Edwin Aljibe","Email Address": "epaljibe@up.edu.ph"},
+        {"Developers": "Kyne De Guzman","Email Address": "kvdeguzman3@up.edu.ph"},
+        {"Developers": "Angelo Dela Fuente","Email Address": "austriadelafuente@gmail.com"},
+        {"Developers": "Levi Ebora","Email Address": "lcebora@up.edu.ph"},
+        {"Developers": "Christian Joriz Martinez (Ceej)","Email Address": "csmartinez@up.edu.ph"},
+        {"Developers": "Alein Narca","Email Address": "adnarca@up.edu.ph"},
+        {"Developers": "Alfred Olivan","Email Address": "aholivan@up.edu.ph"},
+        {"Developers": "Jeanelle Lorelei Paat","Email Address": "n/a"},
+        {"Developers": "Billy Jan Ponce (Bill)","Email Address": "bcponce@up.edu.ph"},
+        {"Developers": "John Paul Punzalan","Email Address": "japunzalan@up.edu.ph"},
+        {"Developers": "Jose Manuel Velarde","Email Address": "jyvelarde@up.edu.ph"},
+    ]
+
+    # Table format
+    table = tabulate(developers, headers="keys", tablefmt="grid")
+
+    # Table display
+    print("PROGRAM DEVELOPERS:")
+    print(table)
 
 def list_entries():
     print("Your saved entries:")
