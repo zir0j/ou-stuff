@@ -143,28 +143,27 @@ def change_password():
 ######################
 
 def menu():
-    ascii_menu_heading = tprint("Diary. <3")
+    ascii_menu_heading = tprint("Diary.")
     while True:
         try:
-            print(ascii_menu_heading)
             print("\nWhat would you want to do?")
             print("1. Write")
             print("2. View/Edit")
             print("3. Change Password")
             print("4. About the program")
             user_choice_1 = input("Enter your choice: ")
-
-            if user_choice_1 == "1":
-                diary_entry()
-            elif user_choice_1 == "2":
-                diary_archives()
-            elif user_choice_1 == "3":
-                change_password()
-            elif user_choice_1 == "4":
-                about_creators()
-            else:
-                print("Hmmm, I didn't get that.")
+            match user_choice_1:
+                case "1":
+                    diary_entry()
+                case "2":
+                    diary_archives()
+                case "3":
+                    change_password()
+                case "4":
+                    about_creators()
+                case _:
+                    print("Hmmm, I didn't get that.")
         except Exception as e:
             print(f"Woops! Restart the terminal. Error: {e}")
 
-menu()  # Open the program when run on terminal
+menu()
