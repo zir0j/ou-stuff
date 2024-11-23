@@ -13,8 +13,8 @@ General Pseudocode
 9. Define function to decrypt entry content
 10. Define function to edit diary entries
 11. Define function to show creator information
-12. Define main menu
-12  Define function to change encryption of content
+12. Define function to change encryption of content
+13. Define main menu
 14. Execute main program
 
 More specific pseudocode
