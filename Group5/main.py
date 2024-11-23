@@ -165,9 +165,11 @@ def change_password():
 ######################
 
 def menu():
-    ascii_menu_heading = tprint("Diary.")
+    ascii_menu_heading = tprint("LockIt!")
     while True:
         try:
+            print(ascii_menu_heading)
+            print("==The diary with a lock==")
             print("\nWhat would you want to do?")
             print("1. Write")
             print("2. View/Edit")
