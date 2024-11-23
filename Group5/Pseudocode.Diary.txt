@@ -14,7 +14,8 @@ General Pseudocode
 10. Define function to edit diary entries
 11. Define function to show creator information
 12. Define main menu
-13. Execute main program
+12  Define function to change encryption of content
+14. Execute main program
 
 More specific pseudocode
 START
@@ -24,12 +25,14 @@ START
 	Ask user to choose from:
 	a. Write a new entry
 	b. View/Edit entries
-	c. About the program
+        c. Change Password
+	d. About the program
 	
 	Depending on choice:
 		- If 1, call diary entry function to write new entry
 		- If 2, call diary archive function to view or edit entries
-		- If 3, call about creators function to display creator information
+                - If 3, call change password function to change encryption
+		- If 4, call about creators function to display creator information
 	
 	In diary entry function:
 		- Prompt user to write and confirm if they're happy.
@@ -47,5 +50,9 @@ START
 	In edit entries function:
 		- Check if text entries exists.
 		- Ask password and allow editing of entries if password matches
+
+        In change password function:
+                - Check if text entry exists
+                - Ask password and allow change password if password matches
 END
 
