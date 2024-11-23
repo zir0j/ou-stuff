@@ -8,6 +8,7 @@ from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from getpass import getpass
+from pwinput import pwinput
 from art import *
 from tabulate import tabulate
 
@@ -32,8 +33,8 @@ def get_password_input():
     file_password = "first"
     reenter_password = "second"
     while file_password != reenter_password:
-        file_password = getpass("Insert the password for this entry: ")
-        reenter_password = getpass("Reenter the password: ")
+        file_password = pwinput("Insert the password for this entry: ")
+        reenter_password = pwinput("Reenter the password: ")
 
         if file_password != reenter_password:
             print("Let's try that again.")
