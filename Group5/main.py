@@ -43,10 +43,10 @@ metadata = load_metadata()
 
 def diary_entry():
     writing_proper = input("Share me your thoughts! Press enter when you're done. >>>") 
-    menu_for_saving = input("Are you happy with what you wrote? Only input Yes or No")
     while True:
-        try:
-            if menu_for_saving.lower() == "Yes":
+        menu_for_saving = input("Are you happy with what you wrote? Only input Yes or No: ")
+        if menu_for_saving.lower() == "yes":
+            try:
                 file_password = getpass("Insert the password for this entry:") 
                 file_name = f"entry_{len(metadata) + 1}.dat"  # Unique file name for each entry
                 encrypted_data = cipher.encrypt((file_password + '\n' + writing_proper).encode())
@@ -56,20 +56,19 @@ def diary_entry():
                 save_metadata(metadata)
                 print("Entry saved securely!")
                 break
-            elif menu_for_saving.lower() == "No":
-                print("Rewriting your entry...")
-                diary_entry()  # Restart the entry process
-                break
-            else:
-                print("Hmmm i didn't recognize that.")
-                break  
-        except Exception as e:
-            print(f"Hmmm that seems to not be there lol. Error: {e}")
+            except Exception as e:
+                print(f"Hmmm that seems to not be there. Error: {e}")
+        elif menu_for_saving.lower() == "no":
+            print("Rewriting your entry...")
+            diary_entry()  # Restart the entry process
+            break
+        else:
+            print("Hmmm I didn't recognize that. Please enter Yes or No.")
 
 def diary_archives():
     print("1. View your entries")
     print("2. Edit your entries")
-    user_choice_2 = input("What would you like to do? Only type the number of your selection.")
+    user_choice_2 = input("What would you like to do? Only type the number of your selection: ")
     try:
         if user_choice_2 == "1":
             list_entries()
