@@ -95,6 +95,7 @@ def diary_archives():
     print("1. View your entries")
     print("2. Edit your entries")
     print("3. Delete your entries")
+    print("4. Go Back to Main Menu")
 
     while True:
         user_choice_2 = input("What would you like to do? ")
@@ -129,10 +130,24 @@ def diary_archives():
                         decrypted_data = cipher.decrypt(entry["data"]).decode()
                         print("Your entry: ")
                         print(decrypted_data)
-
-                        new_entry = input("Enter your updated entry: ")
+                        print("\nOptions:")
+                        print("1. Continue to write at the bottom part?")
+                        print("2. Overwrite the entire entry?")
+                        edit_choice = input("Choose an option (1) or (2): ")
+                        if edit_choice == "1":
+                            print(new_entry)
+                            append_text = input("Enter the words you would like to add: ")
+                            new_entry = decrypted_data + "\n" + append_text  # Add new entry
+                        elif edit_choice == "2":
+                            new_entry = input("Overwrite the new entry: ")  # Overwrite everything
+                        else:
+                            print("Invalid choice. No changes made.")
+                            diary_archives()
+                            return
+                        print("Below is the new data for your file: ", entry_name)
+                        print(new_entry)
                         word_count = count_words(new_entry)
-                        encrypted_data = cipher.encrypt((new_entry).encode()).decode("utf-8")
+                        encrypted_data = cipher.encrypt(new_entry.encode()).decode("utf-8")
                         database[entry_name] = {
                             "data": encrypted_data,
                             "salt": base64.b64encode(salt).decode("utf-8"),
@@ -142,9 +157,11 @@ def diary_archives():
                         print(f"---Entry updated successfully! Word count: {word_count}---")
                     except Exception as e:
                         print("You have entered the wrong password!")
+                    continue
                 else:
                     print("Entry not found!")
-                break
+                diary_archives()
+                continue
             elif user_choice_2 == "3":
                 list_entries()
                 entry_name = input("Enter the name of the diary entry you'd like to delete: ")
@@ -158,16 +175,22 @@ def diary_archives():
                         database.pop(entry_name)
                         save_database(database)
                         print(f"---Entry deleted successfully!---")
+                        diary_archives()
                     except Exception as e:
                         print("You have entered the wrong password!")
+                        diary_archives()
                 else:
                     print("Entry not found!")
-                break
+                    continue
+            elif user_choice_2 == "4":
+                menu()
             else:
-                print("Hmm idk that one.")
+                print("Invalid Choice. Try Again.")
+                diary_archives()
                 continue
         except Exception as e:
             print(f"Hmmm this doesn't belong here. Error: {e}")
+            diary_archives()
 
 def about_creators():
     print("This diary was made by Group 5. For inquiries, message:")
