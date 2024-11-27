@@ -115,8 +115,10 @@ def diary_archives():
                         print(f"---Your edited entry has: {entry['word_count']}---")
                     except Exception as e:
                         print("You have entered the wrong password!")
+                        diary_archives()
                 else:
                     print("Entry not found!")
+                    diary_archives()
                 break
             elif user_choice_2 == "2":
                 list_entries()
