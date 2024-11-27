@@ -92,6 +92,7 @@ def diary_entry():
             break # Empty Data will go infinite loop if no break code.
 
 def diary_archives():
+    print("\nView/Edit/Delete")
     print("1. View your entries")
     print("2. Edit your entries")
     print("3. Delete your entries")
@@ -110,16 +111,17 @@ def diary_archives():
                     cipher = create_fernet_object_using_password(salt = salt, password= pw_input_for_viewing)
                     try:
                         decrypted_data = cipher.decrypt(entry["data"]).decode()
-                        print("Your entry: ")
+                        print("Your entry: ", entry_name)
                         print(decrypted_data)
-                        print(f"---Your edited entry has: {entry['word_count']}---")
+                        print(f"---Your edited entry has: {entry['word_count']} words---")
+                        diary_archives()
                     except Exception as e:
                         print("You have entered the wrong password!")
-                        diary_archives()
+                        diary_archives() #diary_archives()  
                 else:
                     print("Entry not found!")
                     diary_archives()
-                break
+                    return
             elif user_choice_2 == "2":
                 list_entries()
                 entry_name = input("Enter the name of the diary entry you'd like to edit: ")
@@ -137,14 +139,12 @@ def diary_archives():
                         print("2. Overwrite the entire entry?")
                         edit_choice = input("Choose an option (1) or (2): ")
                         if edit_choice == "1":
-                            print(new_entry)
                             append_text = input("Enter the words you would like to add: ")
                             new_entry = decrypted_data + "\n" + append_text  # Add new entry
                         elif edit_choice == "2":
                             new_entry = input("Overwrite the new entry: ")  # Overwrite everything
                         else:
                             print("Invalid choice. No changes made.")
-                            diary_archives()
                             return
                         print("Below is the new data for your file: ", entry_name)
                         print(new_entry)
@@ -157,13 +157,15 @@ def diary_archives():
                         }
                         save_database(database)
                         print(f"---Entry updated successfully! Word count: {word_count}---")
+                        diary_archives()
+                        return
                     except Exception as e:
-                        print("You have entered the wrong password!")
-                    continue
+                        print("You have entered the wrong password!\n Try again!")
+                        return
                 else:
                     print("Entry not found!")
-                diary_archives()
-                continue
+                    diary_archives()
+                    return
             elif user_choice_2 == "3":
                 list_entries()
                 entry_name = input("Enter the name of the diary entry you'd like to delete: ")
@@ -181,18 +183,22 @@ def diary_archives():
                     except Exception as e:
                         print("You have entered the wrong password!")
                         diary_archives()
+                        return
                 else:
                     print("Entry not found!")
-                    continue
+                    diary_archives()
+                    return
             elif user_choice_2 == "4":
-                menu()
+                return
             else:
                 print("Invalid Choice. Try Again.")
                 diary_archives()
-                continue
+                return
         except Exception as e:
             print(f"Hmmm this doesn't belong here. Error: {e}")
             diary_archives()
+            return     
+        break
 
 def about_creators():
     print("This diary was made by Group 5. For inquiries, message:")
@@ -273,10 +279,11 @@ def menu():
                     about_creators()
                 case "5":
                     print("Okay! Have a nice day!")
-                    break
+                    return
                 case _:
                     print("Hmmm, I didn't get that.")
+                    break
         except Exception as e:
             print(f"Woops! Restart the terminal. Error: {e}")
-
+            
 menu()
