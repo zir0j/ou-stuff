@@ -94,7 +94,7 @@ def diary_entry():
 def diary_archives():
     print("1. View your entries")
     print("2. Edit your entries")
-    
+    print("3. Delete your entries")
 
     while True:
         user_choice_2 = input("What would you like to do? ")
@@ -129,19 +129,37 @@ def diary_archives():
                         decrypted_data = cipher.decrypt(entry["data"]).decode()
                         print("Your entry: ")
                         print(decrypted_data)
+
+                        new_entry = input("Enter your updated entry: ")
+                        word_count = count_words(new_entry)
+                        encrypted_data = cipher.encrypt((new_entry).encode()).decode("utf-8")
+                        database[entry_name] = {
+                            "data": encrypted_data,
+                            "salt": base64.b64encode(salt).decode("utf-8"),
+                            "word_count": word_count
+                        }
+                        save_database(database)
+                        print(f"---Entry updated successfully! Word count: {word_count}---")
                     except Exception as e:
                         print("You have entered the wrong password!")
-                    
-                    new_entry = input("Enter your updated entry: ")
-                    word_count = count_words(new_entry)
-                    encrypted_data = cipher.encrypt((new_entry).encode()).decode("utf-8")
-                    database[entry_name] = {
-                        "data": encrypted_data,
-                        "salt": base64.b64encode(salt).decode("utf-8"),
-                        "word_count": word_count
-                    }
-                    save_database(database)
-                    print(f"---Entry updated successfully! Word count: {word_count}---")
+                else:
+                    print("Entry not found!")
+                break
+            elif user_choice_2 == "3":
+                list_entries()
+                entry_name = input("Enter the name of the diary entry you'd like to delete: ")
+                if entry_name in database:
+                    entry = database[entry_name]
+                    pw_input_for_edit = pwinput("Please type the password of the entry you wish to delete: ").encode()
+                    salt = base64.b64decode(entry["salt"].encode())
+                    cipher = create_fernet_object_using_password(salt = salt, password= pw_input_for_edit)
+                    try:
+                        decrypted_data = cipher.decrypt(entry["data"]).decode()
+                        database.pop(entry_name)
+                        save_database(database)
+                        print(f"---Entry deleted successfully!---")
+                    except Exception as e:
+                        print("You have entered the wrong password!")
                 else:
                     print("Entry not found!")
                 break
@@ -208,14 +226,13 @@ def change_password():
 ######################
 
 def menu():
-    ascii_menu_heading = tprint("LockIt!")
     while True:
         try:
-            print(ascii_menu_heading)
+            tprint("LockIt!")
             print("==The diary with a lock==")
             print("\nWhat would you want to do?")
             print("1. Write")
-            print("2. View/Edit")
+            print("2. View/Edit/Delete")
             print("3. Change Password")
             print("4. About the program")
             print("5. Exit Program!")
