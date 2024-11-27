@@ -96,7 +96,8 @@ def diary_archives():
     print("1. View your entries")
     print("2. Edit your entries")
     print("3. Delete your entries")
-    print("4. Go Back to Main Menu")
+    print("4. Change Title")
+    print("5. Go Back to Main Menu")
 
     while True:
         user_choice_2 = input("What would you like to do? ")
@@ -188,7 +189,37 @@ def diary_archives():
                     print("Entry not found!")
                     diary_archives()
                     return
-            elif user_choice_2 == "4":
+            if user_choice_2 == "4":
+                list_entries()
+                entry_name = input("Enter the entry you want to change the title of: ")
+                if entry_name in database:
+                    entry = database[entry_name]
+                    pw_input_for_edit = pwinput("Please type the password of the entry you wish to change the title of: ").encode()
+                    salt = base64.b64decode(entry["salt"].encode())
+                    cipher = create_fernet_object_using_password(salt=salt, password=pw_input_for_edit)
+                    try:
+                        decrypted_data = cipher.decrypt(entry["data"]).decode()
+                        print(f"Current entry content: {decrypted_data}") 
+                        new_title = input("Enter the new title: ")
+                        # Add the entry under the new title
+                        database[new_title] = {
+                            "data": entry["data"],  # Use existing encrypted data
+                            "salt": entry["salt"],
+                            "word_count": entry["word_count"]
+                        }
+                        # Remove the old title
+                        del database[entry_name]
+                        save_database(database)
+                        print(f"---Title changed successfully! New title: {new_title}---")
+                    except Exception as e:
+                        print("You have entered the wrong password!")
+                        diary_archives()
+                    return
+                else:
+                    print("Entry not found!")
+                    diary_archives()
+                    return
+            elif user_choice_2 == "5":
                 return
             else:
                 print("Invalid Choice. Try Again.")
