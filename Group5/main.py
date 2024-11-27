@@ -213,20 +213,14 @@ def diary_archives():
                         print(f"---Title changed successfully! New title: {new_title}---")
                     except Exception as e:
                         print("You have entered the wrong password!")
-                        diary_archives()
                     return
                 else:
                     print("Entry not found!")
-                    diary_archives()
                     return
             elif user_choice_2 == "5":
                 return
-            else:
-                print("Invalid Choice. Try Again.")
-                diary_archives()
-                return
         except Exception as e:
-            print(f"Hmmm this doesn't belong here. Error: {e}")
+            print(f"Invalid Choice. Try Again.: {e}")
             diary_archives()
             return     
         break
