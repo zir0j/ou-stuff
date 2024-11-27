@@ -94,9 +94,10 @@ def diary_entry():
 def diary_archives():
     print("1. View your entries")
     print("2. Edit your entries")
-    user_choice_2 = input("What would you like to do? ")
+    
 
     while True:
+        user_choice_2 = input("What would you like to do? ")
         try:
             if user_choice_2 == "1":
                 list_entries()
