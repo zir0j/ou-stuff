@@ -54,10 +54,15 @@ def save_database(database):
     with open("database.json", "w") as db_file:
         json.dump(database, db_file)
 
+def count_words(text):
+    return len(text.split())
+
 database = load_database()
 
 def diary_entry():
     writing_proper = input("Share to me your thoughts! Press enter when you're done.\n") 
+    word_count = count_words(writing_proper)
+    print(f"---Your new entry has {word_count} words.---")
     menu_for_saving = input("Are you happy with what you wrote? (Y)es or (N)o: ")
     while True:
         try:
@@ -67,7 +72,11 @@ def diary_entry():
                 salt = os.urandom(16)
                 cipher = create_fernet_object_using_password(salt=salt, password=file_password)
                 encrypted_data = cipher.encrypt((writing_proper).encode()).decode("utf-8")
-                database[entry_name] = {"data": encrypted_data, "salt": base64.b64encode(salt).decode("utf-8")}
+                database[entry_name] = {
+                    "data": encrypted_data, 
+                    "salt": base64.b64encode(salt).decode("utf-8"),
+                    "word_count": word_count
+                }
                 save_database(database)
                 print("Entry saved securely!")
                 break
@@ -100,6 +109,7 @@ def diary_archives():
                         decrypted_data = cipher.decrypt(entry["data"]).decode()
                         print("Your entry: ")
                         print(decrypted_data)
+                        print(f"---Your edited entry has: {entry['word_count']}---")
                     except Exception as e:
                         print("You have entered the wrong password!")
                 else:
@@ -121,10 +131,15 @@ def diary_archives():
                         print("You have entered the wrong password!")
                     
                     new_entry = input("Enter your updated entry: ")
+                    word_count = count_words(new_entry)
                     encrypted_data = cipher.encrypt((new_entry).encode()).decode("utf-8")
-                    database[entry_name] = {"data": encrypted_data, "salt": base64.b64encode(salt).decode("utf-8")}
+                    database[entry_name] = {
+                        "data": encrypted_data,
+                        "salt": base64.b64encode(salt).decode("utf-8"),
+                        "word_count": word_count
+                    }
                     save_database(database)
-                    print("Entry updated successfully!")
+                    print(f"---Entry updated successfully! Word count: {word_count}---")
                 else:
                     print("Entry not found!")
                 break
@@ -161,8 +176,9 @@ def about_creators():
 
 def list_entries():
     print("Your saved entries:")
-    for entry in database.keys():
-        print(entry)
+    for entry_name, entry_details in database.items():
+        word_count = entry_details.get("word_count", "Empty")
+        print(f"{entry_name}  |  Word Count: {word_count}")
 
 def change_password():
     list_entries()
