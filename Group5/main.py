@@ -130,9 +130,22 @@ def diary_archives():
                         print("Your entry: ")
                         print(decrypted_data)
 
-                        new_entry = input("Enter your updated entry: ")
+                        print("\nOptions:")
+                        print("1. Append to the existing entry")
+                        print("2. Edit the entire entry")
+                        edit_choice = input("Choose an option (1/2): ")
+
+                         if edit_choice == "1":
+                            append_text = input("Enter the text you'd like to append: ")
+                            new_entry = decrypted_data + "\n" + append_text  # Append the new content
+                        elif edit_choice == "2":
+                            new_entry = input("Enter your updated entry: ")  # Replace the content
+                        else:
+                            print("Invalid choice. No changes made.")
+                            return
+
                         word_count = count_words(new_entry)
-                        encrypted_data = cipher.encrypt((new_entry).encode()).decode("utf-8")
+                        encrypted_data = cipher.encrypt(new_entry.encode()).decode("utf-8")
                         database[entry_name] = {
                             "data": encrypted_data,
                             "salt": base64.b64encode(salt).decode("utf-8"),
