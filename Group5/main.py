@@ -89,6 +89,7 @@ def diary_entry():
                 menu_for_saving = input("Are you happy with what you wrote? (Y)es or (N)o: ")
         except Exception as e:
             print(f"Hmmm, that seems to not be there lol. Error: {e}")
+            break # Empty Data will go infinite loop if no break code.
 
 def diary_archives():
     print("1. View your entries")
