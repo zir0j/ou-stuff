@@ -226,6 +226,12 @@ def diary_archives():
         break
 
 def about_creators():
+    print("About the Program")
+    print()
+    print("Lock It is a secure digital diary that encrypts your entries as non-human-readable files, ensuring that only you can access your private thoughts. Through the use of encryption and password input, it creates a safe and protected repository for your personal reflections.")
+    print()
+    print("The program also features a simple game loop, adding a touch of fun to the journaling experience. With Lock It, you have full control over your content, keeping it secure from unauthorized access.")
+    print()
     print("This diary was made by Group 5. For inquiries, message:")
     # List of program developers with email.
     developers = [
