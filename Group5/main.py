@@ -52,7 +52,6 @@ def get_password_input():
         print("Password accepted.")
         return file_password.encode('UTF-8')
 
-
 # Save the metadata for entries (JSON for simplicity)
 def load_database():
     if not os.path.exists("database.json"):
