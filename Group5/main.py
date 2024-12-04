@@ -11,6 +11,7 @@ from getpass import getpass
 from pwinput import pwinput
 from art import *
 from tabulate import tabulate
+from prompt_toolkit import prompt
 
 ###############
 
@@ -70,39 +71,30 @@ def count_words(text):
 database = load_database()
 
 def diary_entry():
-    writing_proper = input("Share to me your thoughts! Press enter when you're done or type Cancel to go back to main menu.\n")
+    writing_proper = prompt("Share to me your thoughts! Press enter when you're done or type Cancel to go back to main menu.\n")
+    word_count = count_words(writing_proper)
     if writing_proper.lower() == "cancel":
         return
-    else:
-        word_count = count_words(writing_proper)
-        print(f"---Your new entry has {word_count} words.---")
+    print(f"---Your new entry has {word_count} words.---")
+    while True:
         menu_for_saving = input("Are you happy with what you wrote? (Y)es or (N)o: ")
-        while True:
-            try:
-                if menu_for_saving[0].lower() == "y":
-                    entry_name = input("Enter the name of diary entry: ")
-                    file_password = get_password_input()
-                    salt = os.urandom(16)
-                    cipher = create_fernet_object_using_password(salt=salt, password=file_password)
-                    encrypted_data = cipher.encrypt((writing_proper).encode()).decode("utf-8")
-                    database[entry_name] = {
-                        "data": encrypted_data, 
-                        "salt": base64.b64encode(salt).decode("utf-8"),
-                        "word_count": word_count
-                    }
-                    save_database(database)
-                    print("Entry saved securely!")
-                    break
-                elif menu_for_saving[0].lower() == "n":
-                    print("Rewriting your entry...")
-                    diary_entry()  # Restart the entry process
-                    break
-                else:
-                    print("Hmmm, I didn't recognize that.")
-                    menu_for_saving = input("Are you happy with what you wrote? (Y)es or (N)o: ")
-            except Exception as e:
-                print(f"Hmmm, I didn't get that. Error: {e}")
-                break # Empty Data will go infinite loop if no break code.
+        if menu_for_saving[0].lower() == "y":
+            entry_name = input("Enter the name of diary entry: ")
+            file_password = get_password_input()
+            salt = os.urandom(16)
+            cipher = create_fernet_object_using_password(salt=salt, password=file_password)
+            encrypted_data = cipher.encrypt((writing_proper).encode()).decode("utf-8")
+            database[entry_name] = {
+                "data": encrypted_data, 
+                "salt": base64.b64encode(salt).decode("utf-8"),
+                "word_count": word_count
+            }
+            save_database(database)
+            print("Entry saved securely!")
+            break
+        writing_proper = prompt("Continue editing... :", default=writing_proper)
+
+
 
 def diary_archives():
     print("\nView/Edit/Delete")

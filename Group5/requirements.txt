@@ -4,3 +4,5 @@ pycparser==2.22
 pwinput==1.0.0
 tabulate==0.8.9
 art==5.8
+prompt_toolkit==3.0.48
+
