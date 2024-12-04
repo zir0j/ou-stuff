@@ -34,14 +34,14 @@ def get_password_input():
     special_characters = {'@', '#', '!', '~', '$', '%', '^', '&', '*', '(', ')', '-', '+', '/', ':', '.', ',', '<', '>', '?', '|'}
     while True:
         # Prompt the user to input a password
-        file_password = pwinput("Insert the password for this entry: ")
+        file_password = pwinput("Insert the password for this entry >> ")
         # Validate the password length
         if not (8 <= len(file_password) <= 16):
             print("Password must be between 8 and 16 characters. Let's try that again.")
             continue
         # Check for at least one special character
         if not any(c in special_characters for c in file_password):
-            print("Password must contain at least one special character. Let's try that again.")
+            print("Password must contain at least one of any special characters (@#!~$%^&*()-+/:.,'<>?|). Let's try that again.")
             continue
         # Ask the user to re-enter the password
         reenter_password = pwinput("Reenter the password: ")
@@ -77,9 +77,9 @@ def diary_entry():
         return
     print(f"---Your new entry has {word_count} words.---")
     while True:
-        menu_for_saving = input("Are you happy with what you wrote? (Y)es or (N)o: ")
+        menu_for_saving = input("Are you happy with what you wrote? (Y)es or (N)o >> ")
         if menu_for_saving[0].lower() == "y":
-            entry_name = input("Enter the name of diary entry: ")
+            entry_name = input("Enter the name of your diary entry >> ")
             file_password = get_password_input()
             salt = os.urandom(16)
             cipher = create_fernet_object_using_password(salt=salt, password=file_password)
@@ -92,9 +92,7 @@ def diary_entry():
             save_database(database)
             print("Entry saved securely!")
             break
-        writing_proper = prompt("Continue editing... :", default=writing_proper)
-
-
+        writing_proper = prompt("Pick up where you left off! >> ", default=writing_proper)
 
 def diary_archives():
     print("\nView/Edit/Delete")
@@ -105,11 +103,11 @@ def diary_archives():
     print("5. Go Back to Main Menu")
 
     while True:
-        user_choice_2 = input("What would you like to do? ")
+        user_choice_2 = input("What would you like to do? Type the number of what you want to do >>")
         try:
             if user_choice_2 == "1":
                 list_entries()
-                entry_name = input("Enter the name of the diary entry you'd like to view: ")
+                entry_name = input("Enter the name of the diary entry you'd like to view >> ")
                 entry_name_lower = entry_name.lower()
                 entry_match = next((name for name in database if name.lower() == entry_name_lower), None)
                 if entry_match:
@@ -124,7 +122,7 @@ def diary_archives():
                         print(f"---Your edited entry has: {entry['word_count']} words---")
                         diary_archives()
                     except Exception as e:
-                        print("You have entered the wrong password!")
+                        print("You have entered the wrong password! Try again.")
                         diary_archives() #diary_archives()  
                 else:
                     print("Entry not found!")
@@ -132,12 +130,12 @@ def diary_archives():
                     return
             elif user_choice_2 == "2":
                 list_entries()
-                entry_name = input("Enter the name of the diary entry you'd like to edit: ")
+                entry_name = input("Enter the name of the diary entry you'd like to edit >> ")
                 entry_name_lower = entry_name.lower()
                 entry_match = next((name for name in database if name.lower() == entry_name_lower), None)
                 if entry_match:
                     entry = database[entry_match]
-                    pw_input_for_edit = pwinput("Please type the password of the entry you wish to edit: ").encode()
+                    pw_input_for_edit = pwinput("Please type the password of the entry you wish to edit >> ").encode()
                     salt = base64.b64decode(entry["salt"].encode())
                     cipher = create_fernet_object_using_password(salt = salt, password= pw_input_for_edit)
                     try:
@@ -147,12 +145,12 @@ def diary_archives():
                         print("\nOptions:")
                         print("1. Continue to write at the bottom part?")
                         print("2. Overwrite the entire entry?")
-                        edit_choice = input("Choose an option (1) or (2): ")
+                        edit_choice = input("Choose an option by typing (1) or (2) >> ")
                         if edit_choice == "1":
                             append_text = input("Enter the words you would like to add: ")
                             new_entry = decrypted_data + "\n" + append_text  # Add new entry
                         elif edit_choice == "2":
-                            new_entry = input("Overwrite the new entry: ")  # Overwrite everything
+                            new_entry = input("Overwrite the new entry >> ")  # Overwrite everything
                         else:
                             print("Invalid choice. No changes made.")
                             return
@@ -178,12 +176,12 @@ def diary_archives():
                     return
             elif user_choice_2 == "3":
                 list_entries()
-                entry_name = input("Enter the name of the diary entry you'd like to delete: ")
+                entry_name = input("Enter the name of the diary entry you'd like to delete >> ")
                 entry_name_lower = entry_name.lower()
                 entry_match = next((name for name in database if name.lower() == entry_name_lower), None)
                 if entry_match:
                     entry = database[entry_match]
-                    pw_input_for_edit = pwinput("Please type the password of the entry you wish to delete: ").encode()
+                    pw_input_for_edit = pwinput("Please type the password of the entry you wish to delete >> ").encode()
                     salt = base64.b64decode(entry["salt"].encode())
                     cipher = create_fernet_object_using_password(salt = salt, password= pw_input_for_edit)
                     try:
@@ -202,10 +200,10 @@ def diary_archives():
                     return
             if user_choice_2 == "4":
                 list_entries()
-                entry_name = input("Enter the entry you want to change the title of: ")
+                entry_name = input("Enter the entry you want to change the title of >> ")
                 if entry_name in database:
                     entry = database[entry_name]
-                    pw_input_for_edit = pwinput("Please type the password of the entry you wish to change the title of: ").encode()
+                    pw_input_for_edit = pwinput("Please type the password of the entry you wish to change the title of >> ").encode()
                     salt = base64.b64decode(entry["salt"].encode())
                     cipher = create_fernet_object_using_password(salt=salt, password=pw_input_for_edit)
                     try:
@@ -308,7 +306,7 @@ def menu():
             print("3. Change Password")
             print("4. About the program")
             print("5. Exit Program!")
-            user_choice_1 = input("Enter your choice: ")
+            user_choice_1 = input("Enter your choice by typing the number of what you want to do: ")
             match user_choice_1:
                 case "1":
                     diary_entry()
