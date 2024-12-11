@@ -235,12 +235,16 @@ def diary_archives():
         break
 
 def about_creators():
-    print()
-    print("About the Program")
+    print("\nAbout the Program")
     print("Lock It is a secure digital diary that encrypts your entries as non-human-readable files, ensuring that only you can access your private thoughts. Through the use of encryption and password input, it creates a safe and protected repository for your personal reflections.")
     print("The program also features a simple game loop, adding a touch of fun to the journaling experience. With Lock It, you have full control over your content, keeping it secure from unauthorized access.")
-    print()
-    print("This diary was made by Group 5. For inquiries, message:")
+    print("\nData Privacy Disclosure")
+    print("• No Personal Information Collected: We do not collect names, email addresses, phone numbers, or any other identifying data.")
+    print("• No Data Usage Tracking: There is no tracking of how users interact with the program.")
+    print("• Local Storage: All data remains on the user’s device and is not transmitted elsewhere.")
+    print("• Security: The program uses encryption to protect data locally on your device.")
+    print("• No External Access: Data is not accessible from outside the user’s device.")
+    print("\nThis diary was made by Group 5. For inquiries, message:")
     # List of program developers with email.
     developers = [
         {"Developers": "Edwin Aljibe","Email Address": "epaljibe@up.edu.ph"},
