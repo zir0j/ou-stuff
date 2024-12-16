@@ -16,8 +16,9 @@ from prompt_toolkit import prompt
 ###############
 
 
-################
+#######################
 ## FUNCTIONS GO HERE ##
+#######################
 
 # Generate or load the encryption key
 def create_fernet_object_using_password(salt, password):
@@ -53,7 +54,7 @@ def get_password_input():
         print("Password accepted.")
         return file_password.encode('UTF-8')
 
-# Save the metadata for entries (JSON for simplicity)
+# Save the metadata for entries (JSON for simplicity and security)
 def load_database():
     if not os.path.exists("database.json"):
         with open("database.json", "w") as db_file:
@@ -61,6 +62,7 @@ def load_database():
     with open("database.json", "r") as db_file:
         return json.load(db_file)
 
+# Save any user input into encrypted data in the JSON file
 def save_database(database):
     with open("database.json", "w") as db_file:
         json.dump(database, db_file)
@@ -70,6 +72,7 @@ def count_words(text):
 
 database = load_database()
 
+# Function for the user to write their innermost thoughts, desires, etc.
 def diary_entry():
     writing_proper = prompt("Share to me your thoughts! Press enter when you're done or type Cancel to go back to main menu.\n")
     word_count = count_words(writing_proper)
@@ -81,9 +84,11 @@ def diary_entry():
         if menu_for_saving[0].lower() == "y":
             entry_name = input("Enter the name of your diary entry >> ")
             file_password = get_password_input()
+            # Generates random salt characters as added layer of security for password input.
             salt = os.urandom(16)
             cipher = create_fernet_object_using_password(salt=salt, password=file_password)
             encrypted_data = cipher.encrypt((writing_proper).encode()).decode("utf-8")
+            # Creates dictionary for JSON file
             database[entry_name] = {
                 "data": encrypted_data, 
                 "salt": base64.b64encode(salt).decode("utf-8"),
@@ -92,6 +97,7 @@ def diary_entry():
             save_database(database)
             print("Entry saved securely!")
             break
+        # Returns where user left off. 
         writing_proper = prompt("Pick up where you left off! >> ", default=writing_proper)
 
 def diary_archives():
@@ -108,6 +114,7 @@ def diary_archives():
             if user_choice_2 == "1":
                 list_entries()
                 entry_name = input("Enter the name of the diary entry you'd like to view >> ")
+                # Added for case-insensitivity
                 entry_name_lower = entry_name.lower()
                 entry_match = next((name for name in database if name.lower() == entry_name_lower), None)
                 if entry_match:
@@ -115,6 +122,7 @@ def diary_archives():
                     pw_input_for_viewing = pwinput("Please type the password of the entry you wish to view: ").encode()
                     salt = base64.b64decode(entry["salt"].encode())
                     cipher = create_fernet_object_using_password(salt = salt, password= pw_input_for_viewing)
+                    # Checks if passowrd of entry matches 
                     try:
                         decrypted_data = cipher.decrypt(entry["data"]).decode()
                         print("Your entry: ", entry_name)
@@ -123,7 +131,8 @@ def diary_archives():
                         diary_archives()
                     except Exception as e:
                         print("You have entered the wrong password! Try again.")
-                        diary_archives() #diary_archives()  
+                        diary_archives()
+                # Checks if entry is found or not
                 else:
                     print("Entry not found!")
                     diary_archives()
@@ -138,6 +147,7 @@ def diary_archives():
                     pw_input_for_edit = pwinput("Please type the password of the entry you wish to edit >> ").encode()
                     salt = base64.b64decode(entry["salt"].encode())
                     cipher = create_fernet_object_using_password(salt = salt, password= pw_input_for_edit)
+                    # IF successful, it'll decrypt the data of the entry to be changed
                     try:
                         decrypted_data = cipher.decrypt(entry["data"]).decode()
                         print("Your entry: ")
@@ -146,14 +156,21 @@ def diary_archives():
                         print("1. Continue to write at the bottom part?")
                         print("2. Overwrite the entire entry?")
                         edit_choice = input("Choose an option by typing (1) or (2) >> ")
+                        # Adds additional sentences, words, etc, for entry
                         if edit_choice == "1":
                             append_text = input("Enter the words you would like to add: ")
-                            new_entry = decrypted_data + "\n" + append_text  # Add new entry
+                            new_entry = decrypted_data + "\n" + append_text
+                        
+                        # Overwrites all of the entry
                         elif edit_choice == "2":
-                            new_entry = input("Overwrite the new entry >> ")  # Overwrite everything
+                            new_entry = input("Overwrite the new entry >> ")
+
+                        # If choise was not made.
                         else:
                             print("Invalid choice. No changes made.")
                             return
+                        
+                        # New entry upon editing
                         print("Below is the new data for your file: ", entry_name)
                         print(new_entry)
                         word_count = count_words(new_entry)
@@ -184,16 +201,19 @@ def diary_archives():
                     pw_input_for_edit = pwinput("Please type the password of the entry you wish to delete >> ").encode()
                     salt = base64.b64decode(entry["salt"].encode())
                     cipher = create_fernet_object_using_password(salt = salt, password= pw_input_for_edit)
+                    # Decrypts data to be deleted and removes it. 
                     try:
                         decrypted_data = cipher.decrypt(entry["data"]).decode()
                         database.pop(entry_match)
                         save_database(database)
                         print(f"---Entry deleted successfully!---")
                         diary_archives()
+                    # Stops deletion when wrong password is entered
                     except Exception as e:
                         print("You have entered the wrong password!")
                         diary_archives()
                         return
+                # Stops when no entry is found in user input.
                 else:
                     print("Entry not found!")
                     diary_archives()
@@ -207,6 +227,7 @@ def diary_archives():
                     salt = base64.b64decode(entry["salt"].encode())
                     cipher = create_fernet_object_using_password(salt=salt, password=pw_input_for_edit)
                     try:
+                        # Decrypts entry to have title change
                         decrypted_data = cipher.decrypt(entry["data"]).decode()
                         print(f"Current entry content: {decrypted_data}") 
                         new_title = input("Enter the new title: ")
@@ -235,9 +256,11 @@ def diary_archives():
         break
 
 def about_creators():
+    # Learns more about the program creatores
     print("\nAbout the Program")
     print("Lock It is a secure digital diary that encrypts your entries as non-human-readable files, ensuring that only you can access your private thoughts. Through the use of encryption and password input, it creates a safe and protected repository for your personal reflections.")
     print("The program also features a simple game loop, adding a touch of fun to the journaling experience. With Lock It, you have full control over your content, keeping it secure from unauthorized access.")
+    # Data privacy statement
     print("\nData Privacy Disclosure")
     print("• No Personal Information Collected: We do not collect names, email addresses, phone numbers, or any other identifying data.")
     print("• No Data Usage Tracking: There is no tracking of how users interact with the program.")
@@ -268,12 +291,14 @@ def about_creators():
     print(table)
     print("All rights reserved (c) 2024")
 
+# Returns all list entries from database
 def list_entries():
     print("Your saved entries:")
     for entry_name, entry_details in database.items():
         word_count = entry_details.get("word_count", "Empty")
         print(f"{entry_name}  |  Word Count: {word_count}")
 
+# Function for password changes.
 def change_password():
     list_entries()
     entry_name = input("Enter the name of the diary entry you'd like to change the password for: ")
@@ -296,13 +321,13 @@ def change_password():
         print("Entry not found!")
 
 ######################
-###     MENU     ###
+###      MENU      ###
 ######################
 
 def menu():
     while True:
         try:
-            tprint("LockIt!")
+            tprint("LockIt!")                       # ASCII Art for logo of diary program
             print("==The diary with a lock==")
             print("\nWhat would you want to do?")
             print("1. Write")
@@ -311,7 +336,7 @@ def menu():
             print("4. About the program")
             print("5. Exit Program!")
             user_choice_1 = input("Enter your choice by typing the number of what you want to do: ")
-            match user_choice_1:
+            match user_choice_1:                    # Match-case for efficiency
                 case "1":
                     diary_entry()
                 case "2":
